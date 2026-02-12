@@ -1,0 +1,298 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+@layer base {
+  :root {
+    /* ===============================
+       Premium "Aurora" Portfolio Theme
+       =============================== */
+
+    --background: 240 25% 98%;
+    --foreground: 240 15% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 15% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 15% 12%;
+
+    /* Primary becomes deep indigo */
+    --primary: 243 75% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary neutral */
+    --secondary: 240 20% 96%;
+    --secondary-foreground: 240 15% 16%;
+
+    /* Accent becomes cyan */
+    --accent: 190 85% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 240 20% 96%;
+    --muted-foreground: 240 8% 46%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 12% 90%;
+    --input: 240 12% 90%;
+    --ring: 243 75% 58%;
+
+    --radius: 0.75rem;
+
+    /* ===============================
+       Gradients (clean + consistent)
+       =============================== */
+    --gradient-start: 243 75% 58%; /* indigo */
+    --gradient-mid: 270 85% 60%; /* purple */
+    --gradient-end: 190 85% 45%; /* cyan */
+
+    --hero-gradient: linear-gradient(
+      135deg,
+      hsl(var(--gradient-start)),
+      hsl(var(--gradient-mid)),
+      hsl(var(--gradient-end))
+    );
+
+    --text-gradient: linear-gradient(
+      135deg,
+      hsl(var(--gradient-start)),
+      hsl(var(--gradient-end))
+    );
+
+    --card-gradient: linear-gradient(
+      135deg,
+      hsl(var(--gradient-start) / 0.06),
+      hsl(var(--gradient-end) / 0.06)
+    );
+
+    --glass-bg: rgba(255, 255, 255, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.45);
+
+    /* Shadows tuned to feel premium */
+    --shadow-soft: 0 12px 30px -18px rgba(30, 35, 70, 0.18);
+    --shadow-card: 0 18px 55px -28px rgba(20, 25, 40, 0.28);
+    --shadow-glow: 0 0 45px -18px rgba(99, 102, 241, 0.35);
+  }
+
+  .dark {
+    --background: 240 14% 10%;
+    --foreground: 240 20% 96%;
+
+    --card: 240 14% 13%;
+    --card-foreground: 240 20% 96%;
+
+    --popover: 240 14% 13%;
+    --popover-foreground: 240 20% 96%;
+
+    --primary: 243 75% 65%;
+    --primary-foreground: 240 14% 10%;
+
+    --secondary: 240 12% 18%;
+    --secondary-foreground: 240 20% 96%;
+
+    --accent: 190 85% 55%;
+    --accent-foreground: 240 14% 10%;
+
+    --muted: 240 12% 18%;
+    --muted-foreground: 240 10% 62%;
+
+    --border: 240 10% 22%;
+    --input: 240 10% 22%;
+    --ring: 243 75% 65%;
+
+    --glass-bg: rgba(20, 22, 30, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.12);
+
+    --shadow-soft: 0 12px 30px -18px rgba(0, 0, 0, 0.4);
+    --shadow-card: 0 18px 55px -28px rgba(0, 0, 0, 0.55);
+    --shadow-glow: 0 0 55px -18px rgba(99, 102, 241, 0.45);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Inter", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Space Grotesk", sans-serif;
+  }
+}
+
+@layer components {
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--text-gradient);
+  }
+
+  .gradient-bg {
+    background-image: var(--hero-gradient);
+  }
+
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(18px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .section-padding {
+    @apply py-20 md:py-28 px-4 md:px-8;
+  }
+
+  .container-wide {
+    @apply max-w-7xl mx-auto;
+  }
+
+  .stat-card {
+    @apply relative overflow-hidden rounded-2xl p-6 md:p-8;
+    background: var(--card-gradient);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-soft);
+  }
+
+  .project-card {
+    @apply relative overflow-hidden rounded-2xl bg-card;
+    box-shadow: var(--shadow-card);
+  }
+
+  .nav-link {
+    @apply relative px-4 py-2 text-muted-foreground transition-colors duration-200;
+  }
+
+  .nav-link::after {
+    content: "";
+    @apply absolute bottom-0 left-1/2 w-0 h-0.5 -translate-x-1/2 transition-all duration-300;
+    background-image: var(--hero-gradient);
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    @apply w-full;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    @apply text-foreground;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-18px);
+    }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 20px -10px rgba(99, 102, 241, 0.25);
+    }
+    50% {
+      box-shadow: 0 0 50px -14px rgba(34, 211, 238, 0.35);
+    }
+  }
+
+  /* ===============================
+     REAL 3D helpers
+     =============================== */
+  .perspective-1200 {
+    perspective: 1200px;
+  }
+
+  .card-3d {
+    transform-style: preserve-3d;
+    transition: transform 300ms ease, box-shadow 300ms ease;
+    will-change: transform;
+  }
+
+  /* floating depth shadow */
+  .shadow-depth {
+    box-shadow: 0 26px 70px -34px rgba(10, 10, 20, 0.45);
+  }
+
+  .shadow-depth:hover {
+    box-shadow: 0 45px 110px -40px rgba(10, 10, 20, 0.62);
+  }
+
+  /* Border lighting (clean, not neon) */
+  .border-light {
+    position: relative;
+  }
+
+  .border-light::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      120deg,
+      rgba(99, 102, 241, 0.55),
+      transparent,
+      rgba(34, 211, 238, 0.55)
+    );
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 260ms ease;
+    pointer-events: none;
+  }
+
+  .border-light:hover::before {
+    opacity: 1;
+  }
+
+ /* ===== GSAP Pinned 3D Scenes ===== */
+.scene-wrap {
+  min-height: 100vh;
+  position: relative;
+  width: 100%;
+  overflow: visible;
+  perspective: 2400px;
+  perspective-origin: 50% 45%;
+}
+
+.scene {
+  transform-style: preserve-3d;
+  will-change: transform, filter;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene {
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
+
+
+}

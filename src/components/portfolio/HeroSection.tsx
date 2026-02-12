@@ -1,0 +1,268 @@
+import { motion, useMotionValue, useSpring } from "framer-motion";
+import { Download, Github, Linkedin, Twitter, Instagram } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useProfile } from "@/hooks/usePortfolioData";
+import { AnimatedCounter } from "./AnimatedCounter";
+import { HeroBackgroundCanvas } from "./HeroBackgroundCanvas";
+
+export const HeroSection = () => {
+  const { data: profile, isLoading } = useProfile();
+
+  /* ---------------- 3D TILT (CONTENT) ---------------- */
+  const contentRX = useMotionValue(0);
+  const contentRY = useMotionValue(0);
+  const contentX = useSpring(contentRX, { stiffness: 180, damping: 22 });
+  const contentY = useSpring(contentRY, { stiffness: 180, damping: 22 });
+
+  const onContentMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const px = e.clientX - r.left;
+    const py = e.clientY - r.top;
+    const dx = px - r.width / 2;
+    const dy = py - r.height / 2;
+    contentRX.set(-(dy / r.height) * 10);
+    contentRY.set((dx / r.width) * 10);
+  };
+
+  const resetContent = () => {
+    contentRX.set(0);
+    contentRY.set(0);
+  };
+
+  /* ---------------- 3D TILT (IMAGE) ---------------- */
+  const imgRX = useMotionValue(0);
+  const imgRY = useMotionValue(0);
+  const imgX = useSpring(imgRX, { stiffness: 180, damping: 22 });
+  const imgY = useSpring(imgRY, { stiffness: 180, damping: 22 });
+
+  const onImgMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const px = e.clientX - r.left;
+    const py = e.clientY - r.top;
+    const dx = px - r.width / 2;
+    const dy = py - r.height / 2;
+    imgRX.set(-(dy / r.height) * 12);
+    imgRY.set((dx / r.width) * 12);
+  };
+
+  const resetImg = () => {
+    imgRX.set(0);
+    imgRY.set(0);
+  };
+
+  /* ---------------- ANIMATION VARIANTS ---------------- */
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08, delayChildren: 0.12 },
+    },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 18 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: "easeOut" } },
+  };
+
+  if (isLoading) {
+    return (
+      <section id="home" className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground text-lg">Loading...</div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="home" className="min-h-screen flex items-center relative overflow-hidden">
+      {/* ================= POINTER PARALLAX BACKGROUND ================= */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <HeroBackgroundCanvas className="w-full h-full" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/25" />
+      </div>
+
+      <div className="container-wide section-padding relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* IMAGE (mobile top, desktop right) */}
+          <div className="order-1 lg:order-2 flex justify-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.65, ease: "easeOut" }}
+              className="perspective-1200"
+            >
+              <motion.div
+                animate={{ y: [0, -14, 0] }}
+                transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <motion.div
+                  onMouseMove={onImgMove}
+                  onMouseLeave={resetImg}
+                  style={{ rotateX: imgX, rotateY: imgY, transformStyle: "preserve-3d" }}
+                  className="relative rounded-full"
+                >
+                  <div className="absolute left-1/2 top-[105%] -translate-x-1/2 w-[78%] h-10 bg-black/35 blur-2xl rounded-full" />
+                  <div className="absolute inset-0 gradient-bg rounded-full blur-2xl opacity-20 animate-pulse-glow" />
+
+                  <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden border-4 border-primary/25 bg-card shadow-2xl">
+                    {profile?.profile_image_url ? (
+                      <img
+                        src={profile.profile_image_url}
+                        alt={profile.name || "Profile"}
+                        className="w-full h-full object-cover"
+                        draggable={false}
+                      />
+                    ) : (
+                      <div className="w-full h-full gradient-bg flex items-center justify-center text-6xl font-bold text-primary-foreground">
+                        {profile?.name?.charAt(0) || "?"}
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          </div>
+
+          {/* CONTENT */}
+          <div className="order-2 lg:order-1 perspective-1200">
+            <motion.div
+              variants={container}
+              initial="hidden"
+              animate="show"
+              onMouseMove={onContentMove}
+              onMouseLeave={resetContent}
+              style={{ rotateX: contentX, rotateY: contentY, transformStyle: "preserve-3d" }}
+              className="relative rounded-2xl p-6 md:p-8 overflow-hidden
+                         backdrop-blur-xl bg-background/55
+                         border border-white/10 shadow-[0_40px_90px_-35px_rgba(0,0,0,0.65)]"
+            >
+              <motion.div
+                className="pointer-events-none absolute -inset-[2px] rounded-2xl opacity-50"
+                style={{
+                  background:
+                    "conic-gradient(from 0deg, rgba(99,102,241,0.0), rgba(99,102,241,0.35), rgba(236,72,153,0.35), rgba(99,102,241,0.0))",
+                }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              />
+              <div className="absolute inset-[1px] rounded-2xl bg-background/60 backdrop-blur-xl" />
+
+              <div className="relative" style={{ transform: "translateZ(24px)" }}>
+                <motion.p variants={item} className="text-lg text-muted-foreground mb-4">
+                  Welcome to my portfolio
+                </motion.p>
+
+                <motion.h1
+                  variants={item}
+                  className="text-4xl md:text-6xl lg:text-7xl font-display font-extrabold mb-6 leading-tight"
+                >
+                  Hi, I&apos;m{" "}
+                  <span className="gradient-text drop-shadow-lg">
+                    {profile?.name || "Developer"}
+                  </span>
+                </motion.h1>
+
+                <motion.p variants={item} className="text-xl md:text-2xl text-muted-foreground mb-4">
+                  {profile?.title || "Full Stack Developer"}
+                </motion.p>
+
+                <motion.p variants={item} className="text-lg text-foreground/85 mb-8 max-w-lg">
+                  {profile?.bio}
+                </motion.p>
+
+                <motion.div variants={item} className="flex flex-wrap gap-4 mb-10">
+                  {profile?.cv_url && (
+                    <Button
+                      asChild
+                      size="lg"
+                      className="gradient-bg hover:scale-105 transition-all duration-300 shadow-lg"
+                    >
+                      <a href={profile.cv_url} download>
+                        <Download className="mr-2 h-5 w-5" />
+                        Download CV
+                      </a>
+                    </Button>
+                  )}
+
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                    onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
+                  >
+                    Let&apos;s Talk
+                  </Button>
+                </motion.div>
+
+                <motion.div variants={item} className="flex gap-4">
+                  {profile?.github_url && (
+                    <a
+                      href={profile.github_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3 rounded-full bg-card/80 hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                    >
+                      <Github className="h-5 w-5" />
+                    </a>
+                  )}
+                  {profile?.linkedin_url && (
+                    <a
+                      href={profile.linkedin_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3 rounded-full bg-card/80 hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                    >
+                      <Linkedin className="h-5 w-5" />
+                    </a>
+                  )}
+                  {profile?.twitter_url && (
+                    <a
+                      href={profile.twitter_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3 rounded-full bg-card/80 hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                    >
+                      <Twitter className="h-5 w-5" />
+                    </a>
+                  )}
+                  {profile?.instagram_url && (
+                    <a
+                      href={profile.instagram_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3 rounded-full bg-card/80 hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                    >
+                      <Instagram className="h-5 w-5" />
+                    </a>
+                  )}
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 26 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35, duration: 0.6 }}
+          className="grid grid-cols-3 gap-4 md:gap-8 mt-16 md:mt-24"
+        >
+          <div className="stat-card text-center backdrop-blur-lg bg-card/60 rounded-xl p-4 md:p-6 border border-white/10 hover:scale-105 transition-transform">
+            <AnimatedCounter end={profile?.years_experience || 0} duration={2} />
+            <p className="text-muted-foreground mt-2 text-sm md:text-base">Years Experience</p>
+          </div>
+
+          <div className="stat-card text-center backdrop-blur-lg bg-card/60 rounded-xl p-4 md:p-6 border border-white/10 hover:scale-105 transition-transform">
+            <AnimatedCounter end={profile?.projects_completed || 0} duration={2} />
+            <p className="text-muted-foreground mt-2 text-sm md:text-base">Projects Completed</p>
+          </div>
+
+          <div className="stat-card text-center backdrop-blur-lg bg-card/60 rounded-xl p-4 md:p-6 border border-white/10 hover:scale-105 transition-transform">
+            <AnimatedCounter end={profile?.technologies_mastered || 0} duration={2} />
+            <p className="text-muted-foreground mt-2 text-sm md:text-base">Technologies</p>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};

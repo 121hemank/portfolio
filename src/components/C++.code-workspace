@@ -1,0 +1,39 @@
+{
+	"folders": [
+		{
+			"name": "C++",
+			"path": "../../../C++"
+		},
+		{
+			"name": "hemanku-food",
+			"path": "../../../hemanku-food"
+		},
+		{
+			"name": "html",
+			"path": "../../../html"
+		},
+		{
+			"name": "javascript",
+			"path": "../../../javascript"
+		},
+		{
+			"name": "java",
+			"path": "../../../java"
+		},
+		{
+			"path": "../../../python"
+		},
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../Downloads/chronic"
+		},
+		{
+			"path": "../../../customer-compass-main"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "javascript"
+	}
+}
