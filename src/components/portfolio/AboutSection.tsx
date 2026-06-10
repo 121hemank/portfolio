@@ -177,7 +177,7 @@ const TiltCard = ({
     <motion.div
       initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      viewport={{ once: true, margin: "-30px" }}
       transition={{ delay, duration: 0.55, ease: "easeOut" }}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
