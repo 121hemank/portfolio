@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { Download, Github, Linkedin, Twitter, Instagram } from "lucide-react";
+import { Download, Github, Linkedin, Twitter, Instagram, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/usePortfolioData";
 import { AnimatedCounter } from "./AnimatedCounter";
@@ -78,6 +78,47 @@ export const HeroSection = () => {
       <div className="absolute inset-0 z-0 overflow-hidden">
         <HeroBackgroundCanvas className="w-full h-full" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/25" />
+      </div>
+
+      {/* Floating decorative orbs to fill empty space */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <motion.div
+          animate={{ y: [0, -22, 0], opacity: [0.12, 0.28, 0.12] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-10 left-10 w-72 h-72 rounded-full bg-primary/10 blur-[120px]"
+        />
+        <motion.div
+          animate={{ y: [0, -18, 0], opacity: [0.08, 0.22, 0.08] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+          className="absolute top-20 right-12 w-56 h-56 rounded-full bg-accent/10 blur-[100px]"
+        />
+        <motion.div
+          animate={{ x: [0, 18, 0], opacity: [0.08, 0.18, 0.08] }}
+          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+          className="absolute bottom-40 left-16 w-64 h-64 rounded-full bg-purple-500/10 blur-[110px]"
+        />
+        <motion.div
+          animate={{ x: [0, -20, 0], opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+          className="absolute bottom-32 right-20 w-48 h-48 rounded-full bg-primary/10 blur-[90px]"
+        />
+
+        {/* Small floating dots */}
+        <motion.div
+          animate={{ y: [0, -12, 0], scale: [1, 1.3, 1] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          className="absolute top-1/4 right-[15%] w-2 h-2 rounded-full bg-primary/30"
+        />
+        <motion.div
+          animate={{ y: [0, -10, 0], scale: [1, 1.4, 1] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute top-[60%] left-[10%] w-1.5 h-1.5 rounded-full bg-accent/30"
+        />
+        <motion.div
+          animate={{ y: [0, -14, 0], scale: [1, 1.2, 1] }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 3.5 }}
+          className="absolute bottom-[25%] right-[12%] w-2 h-2 rounded-full bg-purple-400/25"
+        />
       </div>
 
       <div className="container-wide section-padding relative z-10">
@@ -263,6 +304,28 @@ export const HeroSection = () => {
           </div>
         </motion.div>
       </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.8, duration: 0.8 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1"
+      >
+        <motion.span
+          animate={{ opacity: [0.25, 0.55, 0.25] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+          className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.22em] font-medium"
+        >
+          Scroll
+        </motion.span>
+        <motion.div
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <ChevronDown className="w-4 h-4 text-muted-foreground/30" />
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
