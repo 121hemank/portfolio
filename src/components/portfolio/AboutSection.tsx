@@ -3,6 +3,8 @@ import { Sparkles, Target, Rocket } from "lucide-react";
 import { useProfile } from "@/hooks/usePortfolioData";
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
+import { AnimatedCodeLines } from "./MotionSVG";
+import { TextReveal } from "./TextReveal";
 
 export const AboutSection = () => {
   const { data: profile } = useProfile();
@@ -38,6 +40,7 @@ export const AboutSection = () => {
       {/* Ambient soft glows */}
       <div className="absolute -top-40 -left-40 w-[520px] h-[520px] bg-primary/10 rounded-full blur-3xl" />
       <div className="absolute -bottom-48 -right-40 w-[640px] h-[640px] bg-accent/10 rounded-full blur-3xl" />
+      <AnimatedCodeLines />
 
       <div className="container-wide relative z-10">
         {/* Heading */}
@@ -200,6 +203,7 @@ const TiltCard = ({
         style={{
           background:
             "conic-gradient(from 0deg, rgba(99,102,241,0.0), rgba(99,102,241,0.35), rgba(236,72,153,0.35), rgba(99,102,241,0.0))",
+          willChange: "transform",
         }}
         animate={{ rotate: 360 }}
         transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
@@ -225,6 +229,7 @@ const TiltCard = ({
         style={{
           background:
             "linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.35), transparent 60%)",
+          willChange: "transform",
         }}
         animate={{ x: ["-120%", "120%"] }}
         transition={{ duration: 7, repeat: Infinity, ease: "linear" }}

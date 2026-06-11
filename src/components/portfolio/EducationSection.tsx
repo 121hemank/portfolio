@@ -3,6 +3,7 @@ import { GraduationCap, Award, ExternalLink } from "lucide-react";
 import { useEducation, useCertifications } from "@/hooks/usePortfolioData";
 import { format } from "date-fns";
 import { useMemo } from "react";
+import { TextReveal } from "./TextReveal";
 
 export const EducationSection = () => {
   const { data: education } = useEducation();
@@ -186,6 +187,7 @@ const FloatingOrb = ({
         style={{
           background:
             "radial-gradient(circle at 30% 30%, hsl(var(--primary)/0.55), transparent 60%)",
+          willChange: "transform",
         }}
         animate={{ x: [0, 28, 0], y: [0, 16, 0], scale: [1, 1.06, 1] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay }}
@@ -214,6 +216,7 @@ const FloatingPrism = ({
           background:
             "conic-gradient(from 0deg, hsl(var(--gradient-start)/0.55), hsl(var(--gradient-mid)/0.45), hsl(var(--gradient-end)/0.50), hsl(var(--gradient-start)/0.55))",
           transformStyle: "preserve-3d",
+          willChange: "transform",
         }}
         animate={{
           rotateX: [18, 26, 18],
@@ -294,6 +297,7 @@ const TiltGlassCard = ({
         style={{
           background:
             "conic-gradient(from 0deg, rgba(99,102,241,0.0), rgba(99,102,241,0.35), rgba(236,72,153,0.35), rgba(99,102,241,0.0))",
+          willChange: "transform",
         }}
         animate={{ rotate: 360 }}
         transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
@@ -319,6 +323,7 @@ const TiltGlassCard = ({
         style={{
           background:
             "linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.35), transparent 60%)",
+          willChange: "transform",
         }}
         animate={{ x: ["-120%", "120%"] }}
         transition={{ duration: 7.5, repeat: Infinity, ease: "linear" }}

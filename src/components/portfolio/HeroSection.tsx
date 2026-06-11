@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/usePortfolioData";
 import { AnimatedCounter } from "./AnimatedCounter";
 import { HeroBackgroundCanvas } from "./HeroBackgroundCanvas";
+import { AnimatedGeometricShapes } from "./MotionSVG";
+import { MagneticButton } from "./MagneticButton";
 
 export const HeroSection = () => {
   const { data: profile, isLoading } = useProfile();
@@ -77,6 +79,7 @@ export const HeroSection = () => {
       {/* ================= POINTER PARALLAX BACKGROUND ================= */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <HeroBackgroundCanvas className="w-full h-full" />
+        <AnimatedGeometricShapes />
         <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/25" />
       </div>
 
@@ -86,21 +89,25 @@ export const HeroSection = () => {
           animate={{ y: [0, -22, 0], opacity: [0.12, 0.28, 0.12] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-10 left-10 w-48 h-48 md:w-72 md:h-72 rounded-full bg-primary/10 blur-[80px] md:blur-[120px]"
+          style={{ willChange: "transform" }}
         />
         <motion.div
           animate={{ y: [0, -18, 0], opacity: [0.08, 0.22, 0.08] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
           className="hidden md:block absolute top-20 right-12 w-56 h-56 rounded-full bg-accent/10 blur-[100px]"
+          style={{ willChange: "transform" }}
         />
         <motion.div
           animate={{ x: [0, 18, 0], opacity: [0.08, 0.18, 0.08] }}
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 3 }}
           className="absolute bottom-32 left-8 md:bottom-40 md:left-16 w-44 h-44 md:w-64 md:h-64 rounded-full bg-purple-500/10 blur-[70px] md:blur-[110px]"
+          style={{ willChange: "transform" }}
         />
         <motion.div
           animate={{ x: [0, -20, 0], opacity: [0.1, 0.2, 0.1] }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 4 }}
           className="hidden md:block absolute bottom-32 right-20 w-48 h-48 rounded-full bg-primary/10 blur-[90px]"
+          style={{ willChange: "transform" }}
         />
 
         {/* Small floating dots */}
@@ -108,16 +115,19 @@ export const HeroSection = () => {
           animate={{ y: [0, -12, 0], scale: [1, 1.3, 1] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
           className="absolute top-1/4 right-[15%] w-2 h-2 rounded-full bg-primary/30"
+          style={{ willChange: "transform" }}
         />
         <motion.div
           animate={{ y: [0, -10, 0], scale: [1, 1.4, 1] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
           className="absolute top-[60%] left-[10%] w-1.5 h-1.5 rounded-full bg-accent/30"
+          style={{ willChange: "transform" }}
         />
         <motion.div
           animate={{ y: [0, -14, 0], scale: [1, 1.2, 1] }}
           transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 3.5 }}
           className="absolute bottom-[25%] right-[12%] w-2 h-2 rounded-full bg-purple-400/25"
+          style={{ willChange: "transform" }}
         />
       </div>
 
@@ -134,6 +144,7 @@ export const HeroSection = () => {
               <motion.div
                 animate={{ y: [0, -14, 0] }}
                 transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut" }}
+                style={{ willChange: "transform" }}
               >
                 <motion.div
                   onMouseMove={onImgMove}
@@ -181,6 +192,7 @@ export const HeroSection = () => {
                 style={{
                   background:
                     "conic-gradient(from 0deg, rgba(99,102,241,0.0), rgba(99,102,241,0.35), rgba(236,72,153,0.35), rgba(99,102,241,0.0))",
+                  willChange: "transform",
                 }}
                 animate={{ rotate: 360 }}
                 transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
@@ -212,26 +224,30 @@ export const HeroSection = () => {
 
                 <motion.div variants={item} className="flex flex-wrap gap-3 md:gap-4 mb-6 md:mb-10">
                   {profile?.cv_url && (
-                    <Button
-                      asChild
-                      size="default"
-                      className="gradient-bg hover:scale-105 transition-all duration-300 shadow-lg"
-                    >
-                      <a href={profile.cv_url} download>
-                        <Download className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-                        Download CV
-                      </a>
-                    </Button>
+                    <MagneticButton>
+                      <Button
+                        asChild
+                        size="default"
+                        className="gradient-bg hover:scale-105 transition-all duration-300 shadow-lg"
+                      >
+                        <a href={profile.cv_url} download>
+                          <Download className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                          Download CV
+                        </a>
+                      </Button>
+                    </MagneticButton>
                   )}
 
-                  <Button
-                    variant="outline"
-                    size="default"
-                    className="hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-                    onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
-                  >
-                    Let&apos;s Talk
-                  </Button>
+                  <MagneticButton>
+                    <Button
+                      variant="outline"
+                      size="default"
+                      className="hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                      onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
+                    >
+                      Let&apos;s Talk
+                    </Button>
+                  </MagneticButton>
                 </motion.div>
 
                 <motion.div variants={item} className="flex gap-3 md:gap-4">
@@ -322,6 +338,7 @@ export const HeroSection = () => {
         <motion.div
           animate={{ y: [0, 6, 0] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          style={{ willChange: "transform" }}
         >
           <ChevronDown className="w-3 h-3 md:w-4 md:h-4 text-muted-foreground/30" />
         </motion.div>

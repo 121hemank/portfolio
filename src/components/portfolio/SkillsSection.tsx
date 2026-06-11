@@ -1,6 +1,8 @@
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useMemo } from "react";
 import { useSkills } from "@/hooks/usePortfolioData";
+import { AnimatedRings } from "./MotionSVG";
+import { TextReveal } from "./TextReveal";
 
 export const SkillsSection = () => {
   const { data: skills, isLoading } = useSkills();
@@ -19,6 +21,7 @@ export const SkillsSection = () => {
       {/* Minimal premium background */}
       <div className="absolute inset-0 bg-muted/20" />
       <div className="absolute inset-0 pointer-events-none opacity-[0.5] bg-[radial-gradient(800px_circle_at_20%_20%,hsl(var(--primary)/0.10),transparent_55%),radial-gradient(900px_circle_at_85%_70%,hsl(var(--accent)/0.08),transparent_60%)]" />
+      <AnimatedRings />
 
       <div className="container-wide relative z-10">
         {/* Heading */}
@@ -29,9 +32,7 @@ export const SkillsSection = () => {
           transition={{ duration: 0.55, ease: "easeOut" }}
           className="text-center mb-14"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-3">
-            Technical <span className="gradient-text">Skills</span>
-          </h2>
+          <TextReveal as="h2" className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-3 gradient-text" text="Technical Skills" />
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             A modern toolkit — focused, scalable, and production-ready.
           </p>

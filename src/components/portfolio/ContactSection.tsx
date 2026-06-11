@@ -19,6 +19,7 @@ import { useProfile } from "@/hooks/usePortfolioData";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { AnimatedWaves, AnimatedDots } from "./MotionSVG";
 
 /* ------------------ Validation ------------------ */
 const contactSchema = z.object({
@@ -94,6 +95,8 @@ export const ContactSection = () => {
       {/* subtle ambient glows (matches your other sections) */}
       <div className="absolute -top-40 -left-40 w-[520px] h-[520px] bg-primary/10 rounded-full blur-3xl" />
       <div className="absolute -bottom-48 -right-40 w-[640px] h-[640px] bg-accent/10 rounded-full blur-3xl" />
+      <AnimatedWaves />
+      <AnimatedDots />
 
       <div className="container-wide relative z-10">
         {/* Header */}
@@ -316,6 +319,7 @@ const TiltGlassCard = (props: TiltGlassCardProps) => {
         style={{
           background:
             "conic-gradient(from 0deg, rgba(99,102,241,0.0), rgba(99,102,241,0.35), rgba(236,72,153,0.35), rgba(99,102,241,0.0))",
+          willChange: "transform",
         }}
         animate={{ rotate: 360 }}
         transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
@@ -341,6 +345,7 @@ const TiltGlassCard = (props: TiltGlassCardProps) => {
         style={{
           background:
             "linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.35), transparent 60%)",
+          willChange: "transform",
         }}
         animate={{ x: ["-120%", "120%"] }}
         transition={{ duration: 7.5, repeat: Infinity, ease: "linear" }}

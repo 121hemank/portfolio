@@ -8,6 +8,9 @@ import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import { LenisSmoothScroll } from "@/components/portfolio/LenisSmoothScroll";
+import { MouseFollower } from "@/components/portfolio/MouseFollower";
+import { ScrollProgressBar } from "@/components/portfolio/ScrollProgressBar";
 
 function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -16,6 +19,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <BrowserRouter>
+          <LenisSmoothScroll />
+          <MouseFollower />
+          <ScrollProgressBar />
           <Toaster />
           <Sonner />
           <Routes>
