@@ -22,11 +22,16 @@ import { z } from "zod";
 import { AnimatedWaves, AnimatedDots } from "./MotionSVG";
 
 /* ------------------ Validation ------------------ */
+const MAX_NAME = 100;
+const MAX_EMAIL = 254;
+const MAX_DETAILS = 5000;
+const MAX_BUDGET = 100;
+
 const contactSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().email(),
-  project_details: z.string().min(1),
-  budget: z.string().optional(),
+  name: z.string().min(1).max(MAX_NAME),
+  email: z.string().email().max(MAX_EMAIL),
+  project_details: z.string().min(1).max(MAX_DETAILS),
+  budget: z.string().max(MAX_BUDGET).optional(),
 });
 
 /* Floating animation */
@@ -34,6 +39,9 @@ const floatAnim = {
   animate: { y: [0, -10, 0] },
   transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
 };
+
+const RATE_LIMIT_WINDOW = 60_000; // 1 minute
+const RATE_LIMIT_KEY = "contact_last_submit";
 
 export const ContactSection = () => {
   const { data: profile } = useProfile();
@@ -46,10 +54,39 @@ export const ContactSection = () => {
     budget: "",
   });
 
+  const checkRateLimit = (): boolean => {
+    const last = localStorage.getItem(RATE_LIMIT_KEY);
+    if (last && Date.now() - Number(last) < RATE_LIMIT_WINDOW) {
+      const remaining = Math.ceil(
+        (RATE_LIMIT_WINDOW - (Date.now() - Number(last))) / 1000
+      );
+      toast({
+        title: "Too fast",
+        description: `Please wait ${remaining}s before sending another message.`,
+        variant: "destructive",
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const sanitize = (val: string) =>
+    val.replace(/<[^>]*>/g, "").replace(/[^\w\s@.,!?\-:;/()$%&'"]/g, "");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const result = contactSchema.safeParse(form);
+    if (!checkRateLimit()) return;
+
+    const sanitized = {
+      ...form,
+      name: sanitize(form.name).slice(0, MAX_NAME),
+      email: form.email.trim().toLowerCase().slice(0, MAX_EMAIL),
+      project_details: sanitize(form.project_details).slice(0, MAX_DETAILS),
+      budget: sanitize(form.budget || "").slice(0, MAX_BUDGET),
+    };
+
+    const result = contactSchema.safeParse(sanitized);
     if (!result.success) {
       toast({
         title: "Invalid input",
@@ -63,7 +100,12 @@ export const ContactSection = () => {
 
     const { data, error } = await supabase
       .from("contact_messages")
-      .insert([form])
+      .insert([{
+        name: sanitized.name,
+        email: sanitized.email,
+        project_details: sanitized.project_details,
+        budget: sanitized.budget || null,
+      }])
       .select("id")
       .single();
 
@@ -76,6 +118,8 @@ export const ContactSection = () => {
       setIsSubmitting(false);
       return;
     }
+
+    localStorage.setItem(RATE_LIMIT_KEY, String(Date.now()));
 
     await supabase.functions.invoke("send-contact-confirmation", {
       body: { message_id: data.id },
