@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
+const ADMIN_EMAIL = "hemankpatel1122@gmail.com";
+
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -17,7 +19,7 @@ export const useAuth = () => {
         setLoading(false);
 
         if (session?.user) {
-          checkAdminStatus(session.user.id);
+          checkAdminStatus(session.user.id, session.user.email);
         } else {
           setIsAdmin(false);
           setAdminChecked(true);
@@ -31,14 +33,21 @@ export const useAuth = () => {
       setLoading(false);
 
       if (session?.user) {
-        checkAdminStatus(session.user.id);
+        checkAdminStatus(session.user.id, session.user.email);
       }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  const checkAdminStatus = async (userId: string) => {
+  const checkAdminStatus = async (userId: string, email?: string | null) => {
+    // Email must match the admin email
+    if (email !== ADMIN_EMAIL) {
+      setIsAdmin(false);
+      setAdminChecked(true);
+      return;
+    }
+
     const { data, error } = await supabase
       .from("user_roles")
       .select("role")
@@ -51,6 +60,10 @@ export const useAuth = () => {
   };
 
   const signIn = async (email: string, password: string) => {
+    if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+      return { error: { message: "Access denied. This email is not authorized." } as any };
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -58,16 +71,8 @@ export const useAuth = () => {
     return { error };
   };
 
-  const signUp = async (email: string, password: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-      },
-    });
-    return { error };
+  const signUp = async (_email: string, _password: string) => {
+    return { error: { message: "Sign up is disabled. Only the admin account can access this panel." } as any };
   };
 
   const signOut = async () => {

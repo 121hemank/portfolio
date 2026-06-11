@@ -6,14 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Mail, Lock } from "lucide-react";
+import { ArrowLeft, Mail, Lock, Shield } from "lucide-react";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
-  const { user, signIn, signUp } = useAuth();
+  const { user, signIn } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -23,7 +22,7 @@ const Auth = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
       toast({ title: "Error", description: "Please fill in all fields", variant: "destructive" });
       return;
@@ -35,49 +34,43 @@ const Auth = () => {
     }
 
     setLoading(true);
-    const { error } = isLogin ? await signIn(email, password) : await signUp(email, password);
+    const { error } = await signIn(email, password);
     setLoading(false);
 
     if (error) {
       let message = error.message;
       if (error.message.includes("Invalid login credentials")) {
         message = "Invalid email or password";
-      } else if (error.message.includes("User already registered")) {
-        message = "An account with this email already exists";
       }
       toast({ title: "Error", description: message, variant: "destructive" });
-    } else if (!isLogin) {
-      toast({ title: "Success!", description: "Account created! You are now logged in." });
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4 relative overflow-hidden">
-      {/* Background decorations */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-      
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md relative z-10"
       >
-        <Button
-          variant="ghost"
-          onClick={() => navigate("/")}
-          className="mb-6"
-        >
+        <Button variant="ghost" onClick={() => navigate("/")} className="mb-6">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Portfolio
         </Button>
 
         <div className="p-8 rounded-2xl bg-card border border-border" style={{ boxShadow: "var(--shadow-card)" }}>
           <div className="text-center mb-8">
+            <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+              <Shield className="w-7 h-7 text-primary" />
+            </div>
             <h1 className="text-3xl font-display font-bold gradient-text mb-2">
-              {isLogin ? "Welcome Back" : "Create Account"}
+              Admin Access
             </h1>
             <p className="text-muted-foreground">
-              {isLogin ? "Sign in to access admin panel" : "Sign up to get started"}
+              Sign in to manage your portfolio
             </p>
           </div>
 
@@ -89,7 +82,7 @@ const Auth = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="admin@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
@@ -115,33 +108,19 @@ const Auth = () => {
               </div>
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full gradient-bg hover:opacity-90" 
+            <Button
+              type="submit"
+              className="w-full gradient-bg hover:opacity-90"
               disabled={loading}
               size="lg"
             >
-              {loading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
+              {loading ? "Please wait..." : "Sign In"}
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              {isLogin ? "Don't have an account?" : "Already have an account?"}
-              <button
-                onClick={() => setIsLogin(!isLogin)}
-                className="ml-1 text-primary hover:underline font-medium"
-              >
-                {isLogin ? "Sign Up" : "Sign In"}
-              </button>
-            </p>
-          </div>
-
-          {!isLogin && (
-            <p className="mt-4 text-xs text-center text-muted-foreground">
-              The first account created will automatically become admin.
-            </p>
-          )}
+          <p className="mt-6 text-xs text-center text-muted-foreground">
+            Only authorized admin email can access this panel.
+          </p>
         </div>
       </motion.div>
     </div>
